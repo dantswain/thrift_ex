@@ -47,7 +47,6 @@ defmodule ThriftEx.Mixfile do
     [app: :thrift_ex,
      version: "0.0.1",
      elixir: "~> 1.1-dev",
-     thrift_dep_dir: Mix.Project.deps_path, 
      deps: deps]
   end
 
@@ -65,18 +64,6 @@ defmodule ThriftEx.Mixfile do
 
 
   def compile_thrift do
-    # This seems to ALWAYS return prod :(
-    env = Atom.to_string(Mix.env)
-
-    build_ebin_dir = Path.join(["..", "..", "..", "..", "_build", env,
-                                "lib", "thrift", "ebin"])
-    IO.puts "BUILD PATH IS #{build_ebin_dir}"
-    IO.puts "CWD IS #{System.cwd}"
-
-    IO.puts "HI #{inspect build_ebin_dir}"
-
-    cmd = "cd lib/erl && ./rebar compile && mkdir -p #{build_ebin_dir} && ls -lah #{build_ebin_dir} && cp ebin/* #{build_ebin_dir}/"
-    IO.puts cmd
-    cmd
+    "cd lib/erl && ./rebar compile && cp -R ebin ../../ebin"
   end
 end
