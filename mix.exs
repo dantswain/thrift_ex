@@ -65,6 +65,7 @@ defmodule ThriftEx.Mixfile do
 
 
   def compile_thrift do
+    # This seems to ALWAYS return prod :(
     env = Atom.to_string(Mix.env)
 
     build_ebin_dir = Path.join(["..", "..", "..", "..", "_build", env,
