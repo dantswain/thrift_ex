@@ -47,25 +47,14 @@ defmodule ThriftEx.Mixfile do
     [app: :thrift_ex,
      version: "0.0.1",
      elixir: "~> 1.1-dev",
+     thrift_dep_dir: Mix.Project.deps_path, 
      deps: deps]
   end
 
-  # Configuration for the OTP application
-  #
-  # Type `mix help compile.app` for more information
   def application do
     [applications: [:logger]]
   end
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # Type `mix help deps` for more examples and options
   defp deps do
     [{:thrift,
       git: "https://github.com/apache/thrift",
@@ -76,12 +65,25 @@ defmodule ThriftEx.Mixfile do
 
 
   def compile_thrift do
-    thrift_lib_dir = Path.join([__DIR__, "deps", "thrift", "lib", "erl"])
+
+    ## HERE is where the problem is
+    ##  In a project that uses this project as a dependency, thrift gets
+    ##  cloned into _that_ project's deps directories, so I need to be
+    ##  able to get into that directory.
+    deps_dir = Mix.Project.deps_path
+    IO.puts "DEPS DIR IS #{inspect deps_dir}"
+    IO.puts "PROJECT CONFIG IS #{inspect Mix.Project.config}"
+
+    thrift_lib_dir = Path.join([deps_dir, "thrift", "lib", "erl"])
     compile_cmd = "./rebar compile"
     ebin_dir = Path.join(thrift_lib_dir, "ebin")
+
+    ## ALSO HERE I need to be able to put the compiled .beam files
+    ## somewhere that the child project will load them
     build_ebin_dir = Path.join([Mix.Project.build_path,
                                 "lib", "thrift", "ebin"])
     IO.puts "BUILD PATH IS #{build_ebin_dir}"
+
     :ok = File.mkdir_p(build_ebin_dir)
     copy_beam_files = "cp #{ebin_dir}/* #{build_ebin_dir}/"
     
