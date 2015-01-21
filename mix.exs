@@ -65,28 +65,17 @@ defmodule ThriftEx.Mixfile do
 
 
   def compile_thrift do
+    env = Atom.to_string(Mix.env)
 
-    ## HERE is where the problem is
-    ##  In a project that uses this project as a dependency, thrift gets
-    ##  cloned into _that_ project's deps directories, so I need to be
-    ##  able to get into that directory.
-    deps_dir = Mix.Project.deps_path
-    IO.puts "DEPS DIR IS #{inspect deps_dir}"
-    IO.puts "PROJECT CONFIG IS #{inspect Mix.Project.config}"
-
-    thrift_lib_dir = Path.join([deps_dir, "thrift", "lib", "erl"])
-    compile_cmd = "./rebar compile"
-    ebin_dir = Path.join(thrift_lib_dir, "ebin")
-
-    ## ALSO HERE I need to be able to put the compiled .beam files
-    ## somewhere that the child project will load them
-    build_ebin_dir = Path.join([Mix.Project.build_path,
+    build_ebin_dir = Path.join(["..", "..", "..", "..", "_build", env,
                                 "lib", "thrift", "ebin"])
     IO.puts "BUILD PATH IS #{build_ebin_dir}"
+    IO.puts "CWD IS #{System.cwd}"
 
-    :ok = File.mkdir_p(build_ebin_dir)
-    copy_beam_files = "cp #{ebin_dir}/* #{build_ebin_dir}/"
-    
-    "cd #{thrift_lib_dir} && #{compile_cmd} && #{copy_beam_files}"
+    IO.puts "HI #{inspect build_ebin_dir}"
+
+    cmd = "cd lib/erl && ./rebar compile && mkdir -p #{build_ebin_dir} && ls -lah #{build_ebin_dir} && cp ebin/* #{build_ebin_dir}/"
+    IO.puts cmd
+    cmd
   end
 end
