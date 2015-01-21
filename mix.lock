@@ -1,0 +1,2 @@
+%{"mix_eunit": {:hex, :mix_eunit, "0.1.1"},
+  "thrift": {:git, "https://github.com/apache/thrift", "591e20f9636c37527a70dc03598218c3468a0eff", [tag: "0.9.2"]}}
