@@ -39,31 +39,3 @@ defmodule Mix.Tasks.Thrift do
     0 = Mix.shell.cmd(cmd)
   end
 end
-
-defmodule ThriftEx.Mixfile do
-  use Mix.Project
-
-  def project do
-    [app: :thrift_ex,
-     version: "0.0.1",
-     elixir: "~> 1.1-dev",
-     deps: deps]
-  end
-
-  def application do
-    [applications: [:logger]]
-  end
-
-  defp deps do
-    [{:thrift,
-      git: "https://github.com/apache/thrift",
-      tag: "0.9.2",
-      app: false,
-      compile: compile_thrift}]
-  end
-
-
-  def compile_thrift do
-    "cd lib/erl && ./rebar compile && mv ebin ../../ebin"
-  end
-end
