@@ -29,7 +29,8 @@ defmodule ThriftEx.Mixfile do
         "cd lib/erl",
         "./rebar compile",
         "rm -rf ../../ebin",
-        "mv ebin ../../ebin"
+        "mv ebin ../../ebin",
+        "cp -R include ../../"
     ] |> Enum.join(" && ")
   end
 end
