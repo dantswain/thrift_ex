@@ -17,7 +17,9 @@ defmodule ThriftEx.Mixfile do
       git: "https://github.com/apache/thrift",
       tag: "0.9.2",
       app: false,
-      compile: compile_thrift}]
+      compile: compile_thrift},
+     {:quaff, git: "https://github.com/dantswain/quaff",
+      branch: "fix_travis"}]
   end
 
 
