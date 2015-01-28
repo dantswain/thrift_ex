@@ -6,6 +6,7 @@ defmodule Mix.Tasks.Thrift do
     File.mkdir_p!(options[:o_dir])
     run_thrift(options[:thrift_dir], options[:o_dir])
     generate_constants_wrappers(options[:o_dir])
+    generate_records_wrappers(options[:o_dir])
   end
 
   defp parse_options(args) do
@@ -54,5 +55,21 @@ defmodule Mix.Tasks.Thrift do
 
   defp constant_files(o_dir) do
     Mix.Utils.extract_files([o_dir], "*_constants.hrl")
+  end
+
+  defp generate_records_wrappers(o_dir) do
+    gen_dir = Path.join([System.cwd, "lib", "ex_gen"])
+    records_files(o_dir)
+    |> Enum.each(fn(hrl) ->
+                   generate_records_wrapper(hrl, gen_dir)
+                 end)
+  end
+
+  defp generate_records_wrapper(hrl, gen_dir) do
+    ThriftEx.RecordsWrapper.generate(hrl, gen_dir)
+  end
+
+  defp records_files(o_dir) do
+    Mix.Utils.extract_files([o_dir], "*_types.hrl")
   end
 end
