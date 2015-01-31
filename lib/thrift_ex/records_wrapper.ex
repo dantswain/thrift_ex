@@ -1,8 +1,13 @@
 defmodule ThriftEx.RecordsWrapper do
   def generate(hrl, out_dir) do
+    IO.puts hrl
     find_records(hrl)
     |> Enum.map(fn(r) ->
-                  extract_record(r, hrl)
+                  %{orig_name: r,
+                    module_name: r,
+                    defn: extract_record(r, hrl),
+                    struct_info: extract_struct_info(r, hrl)
+                   }
                 end)
     |> Enum.map(fn(recd) ->
                   contents = gen_file(hrl, recd)
@@ -27,17 +32,21 @@ defmodule ThriftEx.RecordsWrapper do
         "  Record.defrecord #{inspect record_name}, #{inspect record_tag}, ",
         "      #{inspect recd[:defn]}",
         "",
+        "  def struct_info do",
+        "    #{inspect recd[:struct_info]}",
+        "  end",
         "end",
         ""
     ] |> Enum.join("\n")
   end
 
   defp extract_record(r, hrl) do
-    %{
-            orig_name: r,
-            module_name: r,
-            defn: Record.Extractor.extract(String.to_atom(r), from: hrl)
-        }
+    Record.Extractor.extract(String.to_atom(r), from: hrl)
+  end
+
+  defp extract_struct_info(r, hrl) do
+    m = Path.basename(hrl, ".hrl") |> String.to_atom
+    m.struct_info(r |> String.to_atom)
   end
 
   defp find_records(hrl) do
