@@ -14,7 +14,7 @@ defmodule ThriftExTest do
   end
 
   test "deserialize bonk" do
-    b = ThriftEx.BinaryProtocol.deserialize(@bonk_binary, ThriftExTest.Bonk, :Bonk)
+    b = ThriftEx.BinaryProtocol.deserialize(@bonk_binary, ThriftExTest.Bonk)
     assert b == @bonk
   end
 end

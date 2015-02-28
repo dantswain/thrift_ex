@@ -8,8 +8,8 @@ defmodule ThriftEx.BinaryProtocol do
     :thrift_protocol.write(protocol, {struct_info, data})
   end
 
-  def read(protocol, struct_info, to_obj) do
-    :thrift_protocol.read(protocol, struct_info, to_obj)
+  def read(protocol, struct_info, record_tag) do
+    :thrift_protocol.read(protocol, struct_info, record_tag)
   end
 
   def serialize(data, struct_module, transport \\ ThriftEx.MemoryTransport.new) do
@@ -19,9 +19,9 @@ defmodule ThriftEx.BinaryProtocol do
     |> binary_data
   end
 
-  def deserialize(binary, struct_module, to_obj, transport_type \\ ThriftEx.MemoryTransport) do
+  def deserialize(binary, struct_module, transport_type \\ ThriftEx.MemoryTransport) do
     new(transport_type.new(binary))
-    |> read(struct_module.struct_info, to_obj)
+    |> read(struct_module.struct_info, struct_module.record_tag)
     |> result_obj
   end
 
