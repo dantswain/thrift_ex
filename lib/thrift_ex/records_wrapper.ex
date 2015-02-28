@@ -1,10 +1,10 @@
 defmodule ThriftEx.RecordsWrapper do
-  def generate(hrl, out_dir) do
+  def generate(hrl, out_dir, namespace) do
     IO.puts hrl
     find_records(hrl)
     |> Enum.map(fn(r) ->
                   %{orig_name: r,
-                    module_name: r,
+                    module_name: module_name(namespace, r),
                     defn: extract_record(r, hrl),
                     struct_info: extract_struct_info(r, hrl)
                    }
@@ -18,6 +18,7 @@ defmodule ThriftEx.RecordsWrapper do
   defp write_file(recd, contents, out_dir) do
     fname = Mix.Utils.underscore(recd[:module_name])
     path = Path.join(out_dir, fname <> ".ex")
+    path |> Path.dirname |> File.mkdir_p
     File.write(path, contents)
   end
 
@@ -59,6 +60,15 @@ defmodule ThriftEx.RecordsWrapper do
 
   defp line_defines_record?(line) do
     String.match?(line, ~r/^-record/)
+  end
+
+  defp module_name(nil, name) do
+    Mix.Utils.command_to_module_name(name)
+  end
+
+  defp module_name(namespace, name) do
+    Mix.Utils.command_to_module_name(namespace) <> "." <>
+      Mix.Utils.command_to_module_name(name)
   end
 
   defp record_name_from_line(line) do

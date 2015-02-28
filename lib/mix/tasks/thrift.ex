@@ -8,14 +8,16 @@ defmodule Mix.Tasks.Thrift do
 
     compile_thrift_erl
 
-    generate_constants_wrappers(options[:o_dir])
-    generate_records_wrappers(options[:o_dir])
+    generate_constants_wrappers(options[:o_dir], options[:namespace])
+    generate_records_wrappers(options[:o_dir], options[:namespace])
   end
 
   defp parse_options(args) do
     {switches,
      _argv,
      _errors} = OptionParser.parse(args)
+
+    namespace = switches[:namespace]
 
     thrift_dir = case switches[:thrift_dir] do
                    nil -> "thrift";
@@ -26,7 +28,7 @@ defmodule Mix.Tasks.Thrift do
                 dir -> dir
               end
 
-    %{thrift_dir: thrift_dir, o_dir: o_dir}
+    %{thrift_dir: thrift_dir, o_dir: o_dir, namespace: namespace}
   end
 
   defp run_thrift(thrift_dir, o_dir) do
@@ -44,30 +46,32 @@ defmodule Mix.Tasks.Thrift do
     0 = Mix.shell.cmd(cmd)
   end
 
-  defp generate_constants_wrappers(o_dir) do
+  defp generate_constants_wrappers(o_dir, namespace) do
     gen_dir = Path.join([System.cwd, "lib", "ex_gen"])
     constant_files(o_dir)
     |> Enum.each(fn(hrl) ->
-                   generate_constants_wrapper(hrl, gen_dir)
+                   generate_constants_wrapper(hrl, gen_dir, namespace)
                  end)
   end
 
-  defp generate_constants_wrapper(hrl, gen_dir) do
-    ThriftEx.ConstantsWrapper.generate(hrl, gen_dir)
+  defp generate_constants_wrapper(hrl, gen_dir, namespace) do
+    ThriftEx.ConstantsWrapper.generate(hrl, gen_dir, namespace)
   end
 
   defp constant_files(o_dir) do
     Mix.Utils.extract_files([o_dir], "*_constants.hrl")
   end
 
-  defp generate_records_wrappers(o_dir) do
+  defp generate_records_wrappers(o_dir, namespace) do
     gen_dir = Path.join([System.cwd, "lib", "ex_gen"])
     records_files(o_dir)
-    |> Enum.each(fn(hrl) -> generate_records_wrapper(hrl, gen_dir) end)
+    |> Enum.each(fn(hrl) ->
+                   generate_records_wrapper(hrl, gen_dir, namespace)
+                 end)
   end
 
-  defp generate_records_wrapper(hrl, gen_dir) do
-    ThriftEx.RecordsWrapper.generate(hrl, gen_dir)
+  defp generate_records_wrapper(hrl, gen_dir, namespace) do
+    ThriftEx.RecordsWrapper.generate(hrl, gen_dir, namespace)
   end
 
   defp records_files(o_dir) do
