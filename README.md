@@ -1,6 +1,11 @@
 ThriftEx
 ========
 
+**NOTE** It is recommended that you only use this library as a way to
+pull in the Erlang Thrift library.  If you want to use Thrift in
+Elixir, see [Thrash](https://github.com/dantswain/thrash) - a very
+fast Thrift serializer/deserializer.
+
 This is still WIP.  The intention is to create a dependency that can
 be included in a mix.exs file (ultimately a hex package) to use
 [Apache Thrift](https://thrift.apache.org/) in Elixir and Erlang
