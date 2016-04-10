@@ -1,4 +1,4 @@
 %{"aleppo": {:git, "https://github.com/ChicagoBoss/aleppo.git", "381abaee108637f8df87c556d46ec7a471e8169f", [branch: "master"]},
   "mix_eunit": {:hex, :mix_eunit, "0.1.1"},
-  "quaff": {:git, "https://github.com/qhool/quaff.git", "df680221f52337baefacc4fab42cc8ef546c8fa8", []},
+  "quaff": {:git, "https://github.com/qhool/quaff.git", "df680221f52337baefacc4fab42cc8ef546c8fa8", [tag: "9a4ba378d470beac708e366dc9bacd5a9ef6f016"]},
   "thrift": {:git, "https://github.com/apache/thrift", "591e20f9636c37527a70dc03598218c3468a0eff", [tag: "0.9.2"]}}

@@ -18,7 +18,9 @@ defmodule ThriftEx.Mixfile do
       tag: "0.9.2",
       app: false,
       compile: compile_thrift},
-     {:quaff, github: "qhool/quaff"}]
+     {:quaff,
+      github: "qhool/quaff",
+      tag: "9a4ba378d470beac708e366dc9bacd5a9ef6f016"}]
   end
 
 
